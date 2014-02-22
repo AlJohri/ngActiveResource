@@ -1691,19 +1691,25 @@ angular.module('ActiveResource').provider('ARBase', function () {
           // Generate a GET request for all instances matching the given params, deserialize each
           // into the appropriate class, and return the found collection
           return GET(_this, url, terms, options).then(function (json) {
+            data = json.data;
+            meta = json.meta;
             var results = [];
-            for (var i in json) {
-              var instance = _this.new(json[i]);
+            for (var i in data) {
+              var instance = _this.new(data[i]);
               results.push(instance);
-              serializer.deserialize(json[i], instance, options);
+              serializer.deserialize(data[i], instance, options);
             }
             // Watch all collections that get assigned out as variables
             _this.watchedCollections.push(results);
             _this.emit('where:complete', {
               instance: results,
-              data: json
+              data: data,
+              meta: meta
             });
-            return results;
+            return {
+              data: results,
+              meta: meta
+            };
           });
         };
         // Model#all()
