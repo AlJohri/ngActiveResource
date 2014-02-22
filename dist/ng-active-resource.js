@@ -1050,13 +1050,6 @@ angular.module('ActiveResource').provider('ARMixin', function () {
         giver = new giver();
       }
       for (var i in giver) {
-        if (excludeFunctions) {
-          if (typeof giver[i] !== 'function') {
-            mixinProp();
-          }
-        } else {
-          mixinProp();
-        }
         function mixinProp() {
           if (!receiver.hasOwnProperty(i)) {
             (function () {
@@ -1073,6 +1066,13 @@ angular.module('ActiveResource').provider('ARMixin', function () {
             }());
             receiver[i] = giver[i];
           }
+        }
+        if (excludeFunctions) {
+          if (typeof giver[i] !== 'function') {
+            mixinProp();
+          }
+        } else {
+          mixinProp();
         }
       }
       return receiver;
